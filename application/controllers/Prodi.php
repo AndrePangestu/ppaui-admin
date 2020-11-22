@@ -72,7 +72,6 @@ class Prodi extends CI_Controller{
         }
     }
        
-            
     function edit()
     {
         if(isset($_POST['submit']))

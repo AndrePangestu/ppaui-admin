@@ -10,23 +10,24 @@ class Peserta extends CI_Controller{
 		parent::__construct();
 		date_default_timezone_set("Asia/Jakarta");
 		$this->load->model('M_masterdata');
+		$user = $this->ion_auth->user()->row();
     }
     
     function index()
     {
-        $tahun="SELECT ta.keterangan,ta.tahun_akademik_id
-                FROM student_mahasiswa as sm,akademik_tahun_akademik as ta
-                WHERE ta.tahun_akademik_id=sm.tahun_akademik_id
-                group by ta.tahun_akademik_id";
+        // $tahun="SELECT ta.keterangan,ta.tahun_akademik_id
+        //         FROM student_mahasiswa as sm,akademik_tahun_akademik as ta
+        //         WHERE ta.tahun_akademik_id=sm.tahun_akademik_id
+        //         group by ta.tahun_akademik_id";
         
-        $data['tahun_angkatan'] = $this->db->get('akademik_tahun_akademik')->result();
+        // $data['tahun_angkatan'] = $this->db->get('akademik_tahun_akademik')->result();
 
-		$data1="SELECT student_mahasiswa.mahasiswa_id, student_mahasiswa.nim, student_mahasiswa.nama, student_mahasiswa.gender, student_mahasiswa.email, 
-				student_mahasiswa.no_hp1, akademik_konsentrasi.nama_konsentrasi, student_mahasiswa.bukti
-				FROM (student_mahasiswa 
-				LEFT JOIN akademik_konsentrasi ON student_mahasiswa.konsentrasi_id = akademik_konsentrasi.konsentrasi_id)
-				GROUP BY nama
-				ORDER BY nama ASC";
+		// $data1="SELECT student_mahasiswa.mahasiswa_id, student_mahasiswa.nim, student_mahasiswa.nama, student_mahasiswa.gender, student_mahasiswa.email, 
+		// 		student_mahasiswa.no_hp1, akademik_konsentrasi.nama_konsentrasi, student_mahasiswa.bukti
+		// 		FROM (student_mahasiswa 
+		// 		LEFT JOIN akademik_konsentrasi ON student_mahasiswa.konsentrasi_id = akademik_konsentrasi.konsentrasi_id)
+		// 		GROUP BY nama
+		// 		ORDER BY nama ASC";
 		
 		//$data1="SELECT student_mahasiswa.mahasiswa_id, student_mahasiswa.nim, student_mahasiswa.nama, student_mahasiswa.gender, student_mahasiswa.email, 
 		//		student_mahasiswa.no_hp1, akademik_konsentrasi.nama_konsentrasi, app_waktu.nama_waktu
@@ -36,7 +37,7 @@ class Peserta extends CI_Controller{
 		//		GROUP BY nama
 		//		ORDER BY nama ASC";
 
-	$data['record']	=  $this->db->query($data1)->result();
+	//$data['record']	=  $this->db->query($data1)->result();
 	$data['title']	=  $this->title;
     $data['desc']	=  "";
 
@@ -434,10 +435,7 @@ class Peserta extends CI_Controller{
         $konsentrasi    =   $_GET['konsentrasi'];
         $tahun_angkatan =   $_GET['tahun_angkatan'];
         $data           =   $this->db->get_where('student_mahasiswa',array('konsentrasi_id'=>$konsentrasi,'angkatan_id'=>$tahun_angkatan))->result();	
-	
 
-	// print_r($data);
-	
 	   echo "<tr><th width='5'>No</th><th width='70'>NIP</th><th width='200'>Nama</th>
             <th>P/L</th><th>Email</th><th>No. HP</th>
 			<th>Bukti Bayar</th><th>Keterangan</th><th>Validasi</th><th>Status</th>
@@ -454,7 +452,7 @@ class Peserta extends CI_Controller{
 			//$active=array('id'=>'3','name'=>'status_keu', 'value'=>'3'); 
 			//$cancel=array('id'=>'4','name'=>'status_keu', 'value'=>'4'); 
 			
-            echo "<tr id='hide$r->mahasiswa_id'>
+            echo "<tr id='hide $r->mahasiswa_id'>
                 <td>$no</td>
                 <td>".  strtoupper($r->nim)."</td>
                 <td>".  ucfirst($r->nama)."</td>
@@ -483,12 +481,10 @@ class Peserta extends CI_Controller{
 		 if(trim($this->input->post('gedung_id')) != '') 		$where = " AND a.gedung_id = '".$gedung_id."'";
 		 if(trim($this->input->post('tahun_angkatan')) != '')	$where .= " AND a.tglmulai >= '".$tgl_mulai."'";
 		 if(trim($this->input->post('tahun_angkatan')) != '')	$where .= " AND a.tglakhir <= '".$tgl_akhir."'";
-		 
-		 $sql	="	SELECT a.prodi_id, b.nama_prodi val
+		 $sql	="SELECT a.prodi_id, b.nama_prodi val
 					FROM akademik_konsentrasi a, akademik_prodi b
 					WHERE a.prodi_id=b.prodi_id $where
 					group by a.prodi_id";
-     
          $dt_jenis_pelatihan = $this->db->query($sql)->result();
 		 foreach ($dt_jenis_pelatihan as $row)
          {
@@ -507,28 +503,22 @@ class Peserta extends CI_Controller{
 					FROM akademik_konsentrasi a
 					RIGHT JOIN app_waktu b on a.waktu_id=b.waktu_id
 					WHERE a.konsentrasi_id= '".$konsentrasi_id."'";
-					
          $dt_hari_pelatihan = $this->db->query($sql)->result();
-		
 		 foreach ($dt_hari_pelatihan as $row)
          {
 			 $data['result'] = ucfirst($row->val);
 		 }
 		 echo json_encode($data);
-	
 	}
 	
 	function get_tgl_pelatihan()
     {
 		 error_reporting(0);
          $konsentrasi_id=$this->input->post('konsentrasi_id');
-		 	 
 		 $sql	="	SELECT a.konsentrasi_id, a.tglmulai, a.tglakhir
 					FROM akademik_konsentrasi a
 					WHERE a.konsentrasi_id = '".$konsentrasi_id."'";
-     
          $dt_tgl_pelatihan = $this->db->query($sql)->result();
-		
 		 foreach ($dt_tgl_pelatihan as $row)
          {
 			 $data['result'] = date('d F Y',strtotime($row->tglmulai)) . " s/d ". date('d F Y',strtotime($row->tglakhir));
@@ -540,10 +530,7 @@ class Peserta extends CI_Controller{
     {
 		 error_reporting(0);
          $konsentrasi_id=$this->input->post('konsentrasi_id');
-		 	 
 		 $sql	="	";
-				
-     
          $dt_harga_pelatihan = $this->db->query($sql)->result();
 		
 		 foreach ($dt_harga_pelatihan as $row)
@@ -574,19 +561,24 @@ class Peserta extends CI_Controller{
 	}	
 
 	public function loadpeserta(){
+		$user = $this->ion_auth->user()->row();
 		$kdpelatihan = $this->input->post('kdpelatihan');
 		$result=$this->M_masterdata->get_loadpeserta($kdpelatihan);
 		$jsonArr=array(
-			'rows'=>$result
+			'rows'=>$result,
+			'user'=>$user
 		);
+		//$dataresult = array_merge($jsonArr, (array)$user['user']);
 		echo json_encode($jsonArr);
 	}
 
 	public function loadpesertabatal(){
+		$user = $this->ion_auth->user()->row();
 		$kdpelatihan = $this->input->post('kdpelatihan');
 		$result=$this->M_masterdata->get_loadpesertabatal($kdpelatihan);
 		$jsonArr=array(
-			'rows'=>$result
+			'rows'=>$result,
+			'user'=>$user
 		);
 		echo json_encode($jsonArr);
 	}
@@ -612,7 +604,6 @@ class Peserta extends CI_Controller{
             'alasan_batal' => $this->input->post('alasan_batal'),
         );
         $this->M_masterdata->update_sts_pendaftaran($id_peserta_daftar, $data1);
-
         $status = 'success';
         $jsonArr=array(
 				'status'    =>  $status,
@@ -660,7 +651,18 @@ class Peserta extends CI_Controller{
             'id_peserta_daftar'=>$data['id_peserta_daftar']
         );
         $this->output->set_output(json_encode($jsonArr));
-    }
+	}
 
+	public function modalDataDocument() 
+    {
+        $stack = array();
+        $id = $this->input->post('id');
+        $data['id_peserta_daftar'] = $this->M_masterdata->getdatadocument_id($id);   
+        $jsonArr=array(
+            'id_peserta_daftar'=>$data['id_peserta_daftar']
+        );
+        $this->output->set_output(json_encode($jsonArr));
+    }
 	
+
 }

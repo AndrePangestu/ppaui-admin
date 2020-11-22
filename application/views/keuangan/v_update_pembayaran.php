@@ -9,8 +9,7 @@
 
 <link rel="stylesheet" href="<?php echo base_url()?>assets/css/easy-autocomplete.min.css"/>
 <link rel="stylesheet" href="<?php echo base_url()?>assets/css/easy-autocomplete.themes.min.css"/>
-<link rel="stylesheet" href="<?php echo base_url()?>assets/css/select2.css"/>
-<a href="<?php echo base_url(); ?>Keuangan/sendttp" class="btn btn-primary">Create TTP</a>
+
 <div id="div_tbl_transaksi"></div>
 
 <div id="div_tbl_konfirmasi" class="row">
@@ -30,7 +29,6 @@
               <div id="" style="padding: 5px 20px;">
 
             <form id="form-editdatafile" enctype="multipart/form-data" method="post" class="form-horizontal form-label-left" novalidate>
-            
                 <div id="input_hidden_datakonfirmasi" type="text"></div>
                 <div id="id_peserta_daftar" type="text"></div>
 
@@ -57,6 +55,14 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="text" id="jenis_pembayaran" name="jenis_pembayaran" class="form-control col-md-7 col-xs-12" readonly>
                   </div>
+                </div>
+
+                <div class="form-group">
+                	<label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">Bukti Transfer :
+                  	</label>
+                  	<div id="bukti_transfer" class="col-md-6 col-sm-6 col-xs-12">
+											<!-- <img id="ktp" src="http://www.ppa-febui.com/peserta/assets/images/ppa/ppa_logo.png" class="img-responsive"> -->
+                  	</div>
                 </div>
 
                 <div class="form-group">
@@ -97,22 +103,13 @@
 </div>
 
 
-
-
 <script src="<?php echo base_url();?>assets/js/jquery-3.3.1.min.js"></script>
-
-<script src="<?php echo base_url();?>assets/js/select2.js"></script>
-
-
 
 <script type="text/javascript">
 
     $(document).ready(function(){
         loadkonfirmasi();
-        
-      
     }); 
-  
     function loadkonfirmasi(){
       var url="<?=base_url()?>Keuangan/loadKonfirmasi";
       $.ajax({
@@ -131,7 +128,6 @@
         el+='<table id="datatable-fixed-header" class="table table-striped table-bordered">';
 
         el+="<thead>";
-
         el+="<tr>";
 
         el+="<th>#</th>";
@@ -172,7 +168,6 @@
             }
 
             el+="<td>"+action+"</td>";
-
             el+="</tr>";
             no++;
             });
@@ -209,6 +204,8 @@
           var nama_pelatihan = '';
           var jenis_pembayaran = '';
           var sts_pembayaran = '';
+          var bukti_transfer= '';
+          var base_url = 'http://localhost/ppaui_peserta/';
           
           if(data.id_konfirmasi_bayar.length>0){
             $.each(data.id_konfirmasi_bayar,function(a,b){
@@ -219,6 +216,7 @@
               nama_pelatihan = b.nama_pelatihan;
               jenis_pembayaran = b.sts_pembayaran;
               keterangan = b.keterangan;
+              bukti_transfer = b.bukti_bayar;
             });
           }
 
@@ -228,6 +226,7 @@
           } else{
             $(modalid+' #sts_pembayaran').show();
           }
+          $('#bukti_transfer').html('<img src="'+base_url+'uploads/buktibayar/'+bukti_transfer+'" class="img-responsive">');
           $(modalid+' #id_peserta_daftar').empty().html(id_peserta_daftar);
           $(modalid+' #nama').val(nama);
           $(modalid+' #nama_pelatihan').val(nama_pelatihan);
@@ -248,7 +247,6 @@
                 url   : "<?php echo base_url(); ?>Keuangan/do_edit",
                 type  : "POST",
                 data  : data,
-                dataType: "JSON",
                 contentType: false,
                 cache : false,
                 processData:false,
@@ -256,19 +254,17 @@
                 },
                 success: function(data){
                   $('#modal-editData').modal('hide');
-                  if (data.status=='success'){
-                    //alert('Data Telah di Update');
+                  if (data=='success'){
+                    alert('Data Telah di Update');
                     loadkonfirmasi();
                   }
                   document.getElementById("form-editdatafile").reset();
                   loadkonfirmasi();
-                }
-                              
+                }        
             });
         }
         }));
 
-        
     function loadtransaksi(valueid){
       var param   = { 'valueid' : valueid };
       var url="<?=base_url()?>Keuangan/loadTransaksi";

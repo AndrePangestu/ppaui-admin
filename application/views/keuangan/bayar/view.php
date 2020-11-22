@@ -75,31 +75,36 @@ echo form_open('keuangan/pembayaran');
 </table>
 </form>
 </div>
-<a href="<?php echo base_url(); ?>Keuangan/sendttp" class="btn btn-primary">Save changes</a>
+<!-- <a href="<?php echo base_url(); ?>Keuangan/sendttp" class="btn btn-primary">Save changes</a> -->
 <?php
 echo form_open('keuangan/pembayaran');
 ?>
 <div class="col-sm-6">
     <table class="table table-bordered">
         <tr class="success"><th colspan="2">Form Transaksi</th></tr>
-        <tr><td width="180">Jenis Harga - No. TTP</td><td>
-            <?php echo buatcombo('jenis','keuangan_jenis_bayar','col-sm-6','keterangan','jenis_bayar_id','',array('id'=>'jenis_pembayaran')); ?> 
-			<?php echo inputan('text','no_ttp','col-md-6','Nomor TTP ..',1,'','');?>
-                <!--<div class="col-md-6">
-                     <select name="semester" id="semester" class="form-control">
-                    //    <?php 
-                    //   for($sms=1;$sms<=8;$sms++)
-                    //    {
-                    //        echo "<option VALUE='$sms'>SEMESTER $sms</option>";
-                    //    }
-                    //    ?>
-                    </select>
-                </div> -->
-            </td></tr>
-       
-        <tr><td>Nominal - Tanggal Bayar</td><td><?php echo inputan('text', 'jumlah','col-sm-6','Nominal ..', 1, '','');?> 
-		<?php echo inputan('text', 'tanggal','col-sm-6','Tanggal Bayar ..', 0, '',array('id'=>'datepicker'));?></td>
-		<tr><td>Tipe Pembayaran</td><td><div class="col-md-6"><?php echo form_dropdown('tipe',array('TRANSFER'=>'TRANSFER','TUNAI'=>'TUNAI'),'',"class='form-control'");?></td></tr>
+        <tr>
+            <td width="180">Tahapan Pembayaran</td>
+            <td> 
+            <div class="col-sm-7">
+            <select class="form-control" id="lokasi" name="lokasi" required="required">
+                <option value="pembayaran3">Pembayaran ke 3</option>
+            </select>
+            </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Nominal</td>
+            <td><?php echo inputan('text', 'jumlah','col-sm-6','Nominal ..', 1, '','');?></td>
+        </tr>
+        <tr>
+            <td>Tanggal Bayar</td>
+            <td>
+            <?php echo inputan('text', 'tanggal','col-sm-6','Tanggal Bayar ..', 0, '',array('id'=>'datepicker'));?>
+            </td>
+        </tr>
+		<tr>
+            <td>Tipe Pembayaran</td>
+            <td><div class="col-md-6"><?php echo form_dropdown('tipe',array('TRANSFER'=>'TRANSFER','TUNAI'=>'TUNAI'),'',"class='form-control'");?></td></tr>
 		<tr><th colspan="2"><input type="submit" name="submit2" value="SUBMIT" class="btn btn-danger"></th></tr>
     </table>
 </div>
@@ -219,7 +224,7 @@ if($statuss!="kosong"){
     ?> 
 </table> -->
 
-<div id="div_tbl_konfirmasi" class="row">
+<!-- <div id="div_tbl_konfirmasi" class="row"> -->
     
 </div>
 

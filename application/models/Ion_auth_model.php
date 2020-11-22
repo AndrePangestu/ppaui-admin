@@ -170,6 +170,7 @@ class Ion_auth_model extends CI_Model
 
 	public function __construct()
 	{
+		date_default_timezone_set("Asia/Jakarta");
 		parent::__construct();
 		$this->load->database();
 		$this->load->config('ion_auth', TRUE);
@@ -909,8 +910,9 @@ class Ion_auth_model extends CI_Model
 		    'password'   => $password,
 		    'email'      => $email,
 		    'ip_address' => $ip_address,
-		    'created_on' => time(),
-		    'active'     => ($manual_activation === false ? 1 : 0)
+		    'created_on' => date('Y-m-d H:i:s'),
+			'active'     => ($manual_activation === false ? 1 : 0),
+		    'status_active' => 1,
 		);
 
 		if ($this->store_salt)
@@ -966,7 +968,7 @@ class Ion_auth_model extends CI_Model
 
 		$this->trigger_events('extra_where');
 
-		$query = $this->db->select($this->identity_column . ', email, id, password, active, last_login')
+		$query = $this->db->select($this->identity_column . ', email, id, password, active, last_login, status_active')
 		                  ->where($this->identity_column, $identity)
 		                  ->limit(1)
 		    			  ->order_by('id', 'desc')
@@ -991,7 +993,8 @@ class Ion_auth_model extends CI_Model
 
 			if ($password === TRUE)
 			{
-				if ($user->active == 0)
+				//if ($user->active == 0)
+				if ($user->status_active == 0)
 				{
 					$this->trigger_events('post_login_unsuccessful');
 					$this->set_error('login_unsuccessful_not_active');
@@ -1678,7 +1681,7 @@ class Ion_auth_model extends CI_Model
 
 		$this->trigger_events('extra_where');
 
-		$this->db->update($this->tables['users'], array('last_login' => time()), array('id' => $id));
+		$this->db->update($this->tables['users'], array('last_login' => date('Y-m-d H:i:s')), array('id' => $id));
 
 		return $this->db->affected_rows() == 1;
 	}

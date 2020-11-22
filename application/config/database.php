@@ -75,10 +75,12 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'ppafebui_ppafeui',
-	'password' => 'ppaui1997!+',
-	'database' => 'ppafebui_pelatihan',
+	// 'hostname' => 'localhost',
+	// 'username' => 'root',
+	// 'password' => '',
+	'username' => 'u1022473_rootppaui',
+	'password' => 'YbGpbsd3YP3MCUa',
+	'database' => 'u1022473_db_ppa_febui',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

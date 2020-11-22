@@ -345,6 +345,27 @@
                 	<label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name"><b>Informasi Tempat Kuliah</b>
                   </label>
                 </div>
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Nama Universitas :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="nama_univ" name="nama_univ" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Semester :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="semester" name="semester" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Jurusan :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="jurusan" name="jurusan" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -457,12 +478,81 @@
                   <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
                   <button type="submit" class="btn btn-primary">Ya</button>
                 </div>
-            
             </form>
-
             </div>
           </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-datadocument" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Data Document Peserta</h4>
+              </div>
+              <div class="modal-body">
           
+          </div>
+          <div class="modal-body">
+              <div id="" style="padding: 5px 20px;">
+
+            <form id="form-datadocument" enctype="multipart/form-data" method="post" class="form-horizontal form-label-left">
+            
+                <div id="id_peserta_daftar" type="text"></div>
+				<div id="kd_angkatan" type="text"></div>
+
+				<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">Nama Peserta :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="nama" name="nama" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">Nama Pelatihan :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="nama_pelatihan" name="nama_pelatihan" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>   
+
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">Jenis Pembayaran :
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="jns_pembayaran" name="jns_pembayaran" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">File SMP :
+                  </label>
+                  <div id="file_smp" class="col-md-6 col-sm-6 col-xs-12">
+                    <!-- <input type="text" id="file_gl" name="file_gl" class="form-control col-md-7 col-xs-12" readonly> -->
+                  </div>
+                </div>
+
+								<div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">File GL :
+                  </label>
+                  <div id="file_gl" class="col-md-6 col-sm-6 col-xs-12">
+                    <!-- <input type="text" id="file_gl" name="file_gl" class="form-control col-md-7 col-xs-12" readonly> -->
+                  </div>
+                </div>         
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                  <button type="submit" class="btn btn-primary">Ya</button>
+                </div>
+            
+            </form>
+            </div>
+          </div>
     </div>
   </div>
 </div>
@@ -551,7 +641,7 @@ function pesertaaktif(id){
 				var el='';
 
 				el+="<br><span><b>PESERTA AKTIF PELATIHAN</b></span><br>";
-			
+				el+="<br><span><b>Jumlah "+d.rows.length+" Peserta</b></span><br>";
 				el+='<table id="datatable-fixed-header1" class="table table-striped table-bordered">';
 				el+="<thead>";
 				el+="<tr>";
@@ -599,8 +689,18 @@ function pesertaaktif(id){
 							// el+="<td>"+sts_aktif_peserta+"</td>";
 							
 							el+='<td>';
-							el+='<a type="button" onClick="return batalDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Batal" class="btn btn-sm btn-info"><i class="fa fa-times"></i></a>';
+							if(d.user.id_lvl_admin == 1 || d.user.id_lvl_admin == 2){
+								el+='<a type="button" onClick="return batalDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Batal" class="btn btn-sm btn-info"><i class="fa fa-times"></i></a>';
+							}else{
+								el+='<a type="button" onClick="return batalDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Batal" class="btn btn-sm btn-info" disabled><i class="fa fa-times"></i></a>';
+							}
 							el+='<a type="button" onClick="return dataDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="View" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>';
+
+							if(d.user.id_lvl_admin == 1 || d.user.id_lvl_admin == 4){
+								el+='<a type="button" onClick="return dataDocument(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="View" class="btn btn-sm btn-info"><i class="fa fa-file-text "></i></a>';
+							} else {
+								el+='<a type="button" onClick="return dataDocument(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="View" class="btn btn-sm btn-info disabled"><i class="fa fa-file-text "></i></a>';
+							}
 							el+='</td>';
 					
 							el+="</tr>";
@@ -610,7 +710,7 @@ function pesertaaktif(id){
 						}
 					el+="</tbody></table><br><br>";
 				$("#div_tbl_peserta").empty().html(el);
-				$('#datatable-fixed-header1').DataTable({
+				var table = $('#datatable-fixed-header1').DataTable({
 				});
 			}
 		});
@@ -626,7 +726,8 @@ function pesertabatal(id){
 				var no='1';
 				var el='';
 
-				el+='<br><span><b>PESERTA BATAL PELATIHAN</b></span><br>';			
+				el+='<br><span><b>PESERTA BATAL PELATIHAN</b></span><br>';
+				el+="<br><span><b>Jumlah "+d.rows.length+" Peserta</b></span><br>";			
 				el+='<table id="datatable-fixed-header2" class="table table-striped table-bordered">';
 				el+="<thead>";
 				el+="<tr>";
@@ -674,7 +775,11 @@ function pesertabatal(id){
 							// el+="<td>"+sts_aktif_peserta+"</td>";
 							
 							el+='<td>';
-							el+='<a type="button" onClick="return jadiDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Jadi" class="btn btn-sm btn-info"><i class="fa fa-check"></i></a>';
+							if(d.user.id_lvl_admin == 1 || d.user.id_lvl_admin == 2){
+								el+='<a type="button" onClick="return jadiDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Jadi" class="btn btn-sm btn-info"><i class="fa fa-check"></i></a>';
+							} else {
+								el+='<a type="button" onClick="return jadiDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="Jadi" class="btn btn-sm btn-info disabled"><i class="fa fa-check"></i></a>';
+							}
 							el+='<a type="button" onClick="return dataDaftar(\''+b.id_peserta_daftar+'\');" data-toggle="tooltip" title="View" class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a>';
 							el+='</td>';
 					
@@ -691,8 +796,59 @@ function pesertabatal(id){
 		});
 }
 
-// BATAL DAFTAR //
+//Data Document SMP & GL
+// JADI DAFTAR //
+function dataDocument(id){
+      var url   = "<?php echo site_url('Peserta/modalDataDocument'); ?>";
+      var param   = { 'id' : id };
+      var modalid = '#modal-datadocument';
+      $.ajax({
+        url         : url,
+        type        : 'POST',
+        data        : param,
+        dataType    : 'JSON',
+        beforeSend  : function (){
+				document.getElementById("form-datadocument").reset();
+          $(modalid).modal('show');
+        },
+        success : function(data) {
+          console.log(data);   
+          var id_peserta_daftar = '';
+          var kd_angkatan = '';
+		  		var nama = '';
+          var nama_pelatiahan = '';
+					var jns_pembayaran = '';
+					var base_url = 'http://localhost/ppaui_peserta/';
+					var file_smp = '';
+					var file_gl = '';
+          
+          if(data.id_peserta_daftar.length>0){
+            $.each(data.id_peserta_daftar,function(a,b){
+              id_peserta_daftar+= '<input type="hidden" name="id_peserta_daftar" id="id_peserta_daftar" value="'+b.id_peserta_daftar+'">';
+              kd_angkatan+= '<input type="hidden" name="kd_angkatan" id="kd_angkatan" value="'+b.kd_angkatan+'">';
+              nama = b.nama;
+			  			nama_pelatihan = b.nama_pelatihan;
+							jns_pembayaran = b.jenis_pembayaran;
+							file_smp = b.file_smp;
+							file_gl = b.file_gl;
+            });
+          }
 
+          $(modalid+' #id_peserta_daftar').empty().html(id_peserta_daftar);
+          $(modalid+' #kd_angkatan').empty().html(kd_angkatan);
+		  		$(modalid+' #nama').val(nama);
+          $(modalid+' #nama_pelatihan').val(nama_pelatihan);
+					$(modalid+' #jns_pembayaran').val(jns_pembayaran);
+					$('#file_smp').html('<a class="btn btn-default" href="'+base_url+'uploads/smp/e011cd48f9457f6bbc208558495ad5ca.pdf'+file_smp+'" download>Download</a>');
+					$('#file_gl').html('<a class="btn btn-default" href="'+base_url+'uploads/smp/e011cd48f9457f6bbc208558495ad5ca.pdf'+file_gl+'" download>Download</a>');
+					$(modalid+' #file_smp').val(file_smp);
+					$(modalid+' #file_gl').val(file_gl);
+          $('#form-datadocument').show();
+        }  
+      });
+}
+
+// BATAL DAFTAR //
 function batalDaftar(id){
       var url   = "<?php echo site_url('Peserta/modalBatalDaftar'); ?>";
       var param   = { 'id' : id };
@@ -711,7 +867,7 @@ function batalDaftar(id){
           console.log(data);
           var id_peserta_daftar = '';
           var kd_angkatan = '';
-		  var nama = '';
+		  		var nama = '';
           var nama_pelatiahan = '';
           
           if(data.id_peserta_daftar.length>0){
@@ -761,7 +917,6 @@ $("#form-bataldaftar").on('submit',(function(e) {
 }));
 
 // JADI DAFTAR //
-
 function jadiDaftar(id){
       var url   = "<?php echo site_url('Peserta/modalJadiDaftar'); ?>";
       var param   = { 'id' : id };
@@ -772,7 +927,7 @@ function jadiDaftar(id){
         data        : param,
         dataType    : 'JSON',
         beforeSend  : function (){
-		document.getElementById("form-jadidaftar").reset();
+				document.getElementById("form-jadidaftar").reset();
           $(modalid).modal('show');
         },
         success : function(data) {
@@ -780,7 +935,7 @@ function jadiDaftar(id){
           console.log(data);
           var id_peserta_daftar = '';
           var kd_angkatan = '';
-		  var nama = '';
+		  		var nama = '';
           var nama_pelatiahan = '';
           
           if(data.id_peserta_daftar.length>0){
@@ -856,7 +1011,7 @@ function dataDaftar(id){
           var pekerjaan = '';
           var no_ktp = '';
 					var ktp = '';
-					var base_url = 'http://www.ppa-febui.com/peserta/';
+					var base_url = 'http://localhost/ppaui_peserta/';
 
 					var nama_kantor = '';
 					var bidang_usaha = '';
@@ -866,13 +1021,9 @@ function dataDaftar(id){
 					var jabatan = '';
 					var div_bagian = '';
 
-					// var nama_kantor = '';
-					// var nama_kantor = '';
-					// var nama_kantor = '';
-					// var nama_kantor = '';
-					// var nama_kantor = '';
-					// var nama_kantor = '';
-
+					var nama_univ = '';
+					var semester = '';
+					var jurusan = '';
           
           if(data.id_peserta_daftar.length>0){
             $.each(data.id_peserta_daftar,function(a,b){
@@ -899,7 +1050,9 @@ function dataDaftar(id){
 							jabatan = b.jabatan
 							div_bagian = b.div_bagian
 
-
+							nama_univ = b.nama_univ;
+							semester = b.semester;
+							jurusan = b.jurusan;
             });
           }
 
@@ -924,12 +1077,14 @@ function dataDaftar(id){
 					$(modalid1+' #no_telp').val(no_telp);
 					$(modalid1+' #jabatan').val(jabatan);
 					$(modalid1+' #div_bagian').val(div_bagian);
+
+					$(modalid1+' #nama_univ').val(no_telp);
+					$(modalid1+' #semester').val(semester);
+					$(modalid1+' #jurusan').val(jurusan);
 					
           $('#form-datadaftar').show();
         }   
       });
 }
-
-
 
 </script>

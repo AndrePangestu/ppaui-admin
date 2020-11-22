@@ -43,8 +43,6 @@ class Keuangan extends CI_Controller
     function nameAutocomplete(){
         //get search term
         $searchTerm = $_GET['term'];
-
-
         
         //get matched data from skills table
         $query = $db->query("SELECT * FROM tbl_peserta_akun WHERE nama LIKE '%".$searchTerm."%' ORDER BY nama ASC");
@@ -419,8 +417,6 @@ class Keuangan extends CI_Controller
         }
     }
     
-    
-    
     function laporanpembayaran()
     {
         $tanggal1=  $this->uri->segment(3);
@@ -432,7 +428,6 @@ class Keuangan extends CI_Controller
         $data['transaksi']=  $this->db->query($query)->result();
         $this->load->view('keuangan/laporanpembayaran',$data);
     }
-    
     
     function jurnalkhusus()
     {
@@ -523,26 +518,6 @@ class Keuangan extends CI_Controller
         echo "SMS SUDAH DIKIRIM";
     }
     
-    function pdf()
-    {
-        $this->load->library(array('cfpdf'));
-        $pdf = new FPDF('L','mm','A4');
-        $pdf->AddPage();
-        $pdf->Line(200, 37, 10, 37);
-        $pdf->Line(200, 38, 10, 38);
-        $pdf->Cell(10,32,'',0,1,'L');
-        $pdf->SetFont('Arial','B',11);
-        $pdf->Cell(10,14,'No',1,0,'L');
-        $pdf->Cell(25,14,'NIP',1,0,'L');
-        $pdf->Cell(83,14,'Nama Peserta',1,0,'L');
-        $pdf->Cell(72,7,'PEKA',1,2,'L');
-        $pdf->Cell(72,7,'PEKA',1,0,'L');
-        $pdf->Cell(72,7,'PEKA',1,0,'L');
-        $pdf->Cell(72,7,'PEKA',1,0,'L');
-        $pdf->Line(10, 10, 10, 10);
-        $pdf->Output();
-    }
-    
     function _kirim_sms($noHp,$pesan)
     {
             if($noHp!='')
@@ -590,9 +565,23 @@ class Keuangan extends CI_Controller
         $id_peserta_daftar = $this->input->post('id_peserta_daftar');
 
         $grabdata = $this->M_masterdata->getdatafile_id(); 
+        $data_ttp = $this->M_masterdata->get_data_ttp($id_konfirmasi_bayar);
+        $today = date('j F Y');
 
+        $no_ttp = 1;
+        $found = false;
+        while($found == false){
+            $a = $this->M_masterdata->ttp_exists($no_ttp);
+            if($a == 'ada') {
+                $no_ttp++;
+            } else {
+                $found = true;
+            }
+        }
         $data = array(  
-            'sts_konfirm_admin' => 1
+            'sts_konfirm_admin' => 1,
+            'tgl_konfirm_admin' => date('Y-m-d H:i:s'),
+            'no_ttp' => $no_ttp
         );
         $this->M_masterdata->update_sts_konfirmasi($id_konfirmasi_bayar, $data);
 
@@ -602,13 +591,10 @@ class Keuangan extends CI_Controller
         );
         $this->M_masterdata->update_sts_pendaftaran($id_peserta_daftar, $data1);
 
-        $this->sendttp();
+       $this->createttp($no_ttp,$data_ttp,$today);
+       $this->sendEmailTtp($no_ttp,$data_ttp,$today);
 
-        $status = 'success';
-        $jsonArr=array(
-                'status'    =>  $status,
-        );  
-        echo json_encode($jsonArr);
+        echo 'success';
     }
 
     public function datakeuangan(){
@@ -636,14 +622,12 @@ class Keuangan extends CI_Controller
 
     public function generateDetailPeserta(){
         $idpeserta = $this->input->post('id');
-        
         $data=$this->M_masterdata->GetDetailPeserta($idpeserta);        
         echo json_encode($data);
     }
 
     public function loadTransaksi(){
         $idpeserta = $this->input->post('valueid');
-
         $search= $this->M_masterdata->getTransaksiPeserta($idpeserta);
         $jsonArr=array(
             'rows'=>$search
@@ -658,165 +642,179 @@ class Keuangan extends CI_Controller
         $this->template->load('template', $this->folder.'/v_update_pembayaran',$data);
     }
 
-    public function sendttp(){
+    public function createttp($no_ttp,$data_ttp,$today){
         // Require composer autoload
-        //$a = require_once __DIR__ . '/vendor/autoload.php';
-        $a = require_once (APPPATH.'libraries/mpdf/vendor/autoload.php');
-        //$a = require_once('mpdf/vendor/autoload.php');
 
+        $a = require_once (APPPATH.'libraries/mpdf/vendor/autoload.php');
         // Create an instance of the class:
         $mpdf = new \Mpdf\Mpdf();
 
+        $tgl_transfer = $data_ttp[0]->tgl_transfer;
+        $hasil_tgl_transfer = date('d/m/Y',strtotime($tgl_transfer));
         $mpdf->Bookmark('Start of the document');
 
         // Write some HTML code:
         $mpdf->WriteHTML('<page style="background: white; display: block; margin: 0 auto; margin-bottom: 0.5cm; box-shadow: 0 0 0.5cm rgba(0,0,0,0.5); width: 21cm; height: 29.7cm;"> 
-
         <div style="color:#333333;">
             <section style="padding:20px;">
-            
-                <div>
-                    <div>
-                        <h1>Invoice <small style="font-size:12px; float:right;">Date: 12/05/2016 <button style="" onclick="window.print();">Print</button></small></h1>
-                        <div class="col-xs-12">
-    
-                        </div>
+                <div style="height:120px; margin-bottom:1px; border-bottom:2px solid;">
+                    <div style="width:38%; float:left;">
+                        <img src="http://www.ppa-febui.com/peserta/assets/images/ppa/ppa-logo-long.png" style="max-width:270px; padding:20px 0;">
+                    </div>
+                    <div style="width:60%; float:right;">
+                        <h2 style="font-size:18px; padding-bottom:4px; margin-bottom:4px;">PUSAT PENGEMBANGAN AKUNTANSI FEB UI</h2>
+                        <p style="font-size:12px; font-weight:400; margin-top:2px;">Jl. Salemba Raya No. 4 Jakarta Pusat, Telp. (021) 390-8966, Fax. (021) 390-8967<br>
+                        Gd. Dept. Akuntansi FEUI Lt. 1 Depok, Telp. (021) 7888-6407, Fax. (021) 7888-6407<br>
+                        http://www.ppa-feui.com, e-mail: mail@ppa-feui.com</p>
                     </div>
                 </div>
-
+                <hr style="margin-top:1px; margin-bottom:30px;">
                 <div style="margin-bottom:0; padding-bottom:0;">
-                    <div style="width:33.33%; display: block; float:left;">
-                        From
-                        <address>
-                            <strong>PPA FEB UI</strong>
-                            <br>795 Freedom Ave, Suite 600
-                            <br>New York, CA 94107
-                            <br>Phone: 1 (804) 123-9876
-                            <br>Email: info@jawdat.com
-                        </address>
+                    <div style="width:100%; display: block; text-align:center;">                       
+                        <p>
+                            <strong style="text-decoration: underline;">TANDA TERIMA PESERTA </strong>
+                            <br>
+                            No. '.$no_ttp.'<span>&nbsp; </span> S /PPA/PLT/20                            
+                        </p>
                     </div>
-                   
-                    <div style="width:33.33%; display: block; float:left;">
-                        To
-                        <address>
-                            <strong>John Doe</strong>
-                            <br>795 Freedom Ave, Suite 600
-                            <br>New York, CA 94107
-                            <br>Phone: 1 (804) 123-9876
-                            <br>Email: jon@emailjdt.com
-                        </address>
-                    </div>
-                    
-                    <div style="width:28%; display: block; float:left; background:rgba(0,0,0,.2); padding:20px;">
-                        <b>Invoice #007612</b>
-                        <br>
-                        <br>
-                        <b>Order ID:</b> 4F3S8J
-                        <br>
-                        <b>Payment Due:</b> 11/05/2018
-                        <br>
-                        <b>Account:</b> 968-34567
-                    </div>
-                   
                 </div>
-                
-                
-                <div style="width:100%;">
-
+                <div style="width:90%; margin:20px 30px;">
                     <div>
-                        <h1>&nbsp; </h1>
-                        <hr>
-                        <h3><strong>Pelatihan PPA-FEB UI</strong></h3>
-                        <p><strong>Invoice<br>Tagihan</strong></p>
-                    </div>
-                    <div>
-                        <table cellspacing="0px" cellpadding="1px" border="1" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Pelatihan</th>
-                                    <th>Tanggal Pelatihan</th>
-                                    <th>Lokasi</th>
-                                    <th>Jatuh Tempo</th>
-                                    <th>Biaya (Rp)</th>
-                                  
-
-                                </tr>
-                            </thead>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tbody>
                                 <tr>
-                                    <td>1</td>
-                                    <td>Pelatihan 1</td>
-                                    <td>12/01/2019</td>
-                                    <td>Salemba</td>
-                                    <td>12/12/2018/td>
-                                    <td>5,000,000</td>
+                                    <td width="200">Telah terima dari</td>
+                                    <td>:</td>
+                                    <td>'.$data_ttp[0]->nama.'</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
-                                    <td>Pelatihan 2</td>
-                                    <td>12/01/2019</td>
-                                    <td>Salemba</td>
-                                    <td>12/12/2018/td>
-                                    <td>5,000,000</td>
+                                    <td width="200">Nama / Instansi</td>
+                                    <td>:</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
-                                    <td>Pelatihan 3</td>
-                                    <td>12/01/2019</td>
-                                    <td>Salemba</td>
-                                    <td>12/12/2018/td>
-                                    <td>5,000,000</td>
+                                    <td width="200">Untuk Kegiatan / Kode</td>
+                                    <td>:</td>
+                                    <td>'.$data_ttp[0]->kd_pelatihan.'</td>
                                 </tr>
-
+                                <tr>
+                                    <td width="200">Jumlah-nett</td>
+                                    <td>:</td>
+                                    <td>Rp.'.$data_ttp[0]->total_bayar.'</td>
+                                </tr>
+                                <tr>
+                                    <td width="200">Terbilang</td>
+                                    <td>:</td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            
 
-                <div>
-                    
-                    <br><br>
-                  
-                    <div style="float:right;">
-                        
-                        <div >
-                            <table >
-                                <tbody>
-                                    <tr>
-                                        <th style="width:50%">Subtotal:</th>
-                                        <td>Rp. 15,000,000,-</td>
-                                    </tr>
-                                    <tr>
-                                        <th>PPH (10%)</th>
-                                        <td>Rp. 1,500,000,-</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total:</th>
-                                        <td>Rp. 16,500,000,-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <div style="width:50%; margin:20px 30px;">
+                    <div>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td width="160">Diskon</td>
+                                    <td> : </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td width="160">Metode Pembayaran</td>
+                                    <td>:</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                        
+                        <table style="margin-left:40px;">
+                            <tbody>
+                                <tr style="margin-left:30px;">
+                                    <td>1. '.$data_ttp[0]->sts_pembayaran.'</td>
+                                </tr>
+                                <tr style="margin-left:30px;">
+                                    <td>2. Transfer</td><td>:</td><td>Tgl '.$hasil_tgl_transfer.'</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
 
+                <div style="float:right;">
+                    <div style="width:200px; text-align:center;">
+                        <p>Jakarta, '.$today.'</p>
+                        <p>Penerima</p>
+                        <div style="height:70px;"></div>
+                        <p>( Admin )</p>
+                    </div>
                 </div>
-                </div>
-                
             </section>
         </div>
-
-
     </page>');
 
+        $name_file = "TTP".$no_ttp;
         // Output a PDF file directly to the browser
-        $filename = 'TTP';
-        $mpdf->Output($filename ,'I');
+        $filename = './ttp/'.$name_file.'.pdf';
+        //$filename = 'TTP.pdf';
+        //$mpdf->Output($filename ,'I');
+        $mpdf->Output($filename, \Mpdf\Output\Destination::FILE);
     }
+    
+    public function sendEmailTtp($no_ttp,$data_ttp,$today)
+    {
+      //Load email library
+      $this->load->library('email');
+      $this->load->library('encrypt');
 
+      // SMTP & mail configuration
+    //   $config = array(
+    //       'protocol'  => 'POP3',
+    //       'smtp_host' => 'mail.ppa-febui.com',
+    //       'smtp_port' => 995,
+    //       'smtp_user' => 'admin@ppa-febui.com',
+    //       'smtp_pass' => 'febui@2018',
+    //       'mailtype'  => 'html',
+    //       'charset'   => 'utf-8'
+    //   );
+
+      $config = Array(
+        'protocol' => 'smtp',
+        'smtp_host' => 'ssl://smtp.googlemail.com',
+        'smtp_port' => 465,
+        'smtp_user' => 'littlebossid.official@gmail.com', // change it to yours
+        'smtp_pass' => 'L1ttl3B055', // change it to yours
+        'mailtype' => 'html',
+        'charset' => 'iso-8859-1',
+        'newline' => "\r\n",
+        'wordwrap' => TRUE
+    );
+      $this->email->initialize($config);
+      $this->email->set_mailtype("html");
+      $this->email->set_newline("\r\n");
+
+      $htmlContent = "Dear ".$data_ttp[0]->nama."<br><br>";
+      $htmlContent .= 'Konfirmasi pembayaran anda sudah berhasil di approve oleh admin<br><br>';
+     
+      $htmlContent .= 'Silahkan unduh attachment di bawah ini sebagai bukti pembayaran yang sah<br>';
+
+      $this->email->to($data_ttp[0]->email);
+      $this->email->from('info@ppa-ui.divrow.com','PPA UI ADMIN');
+      $this->email->subject('Approval Konfirmasi Bayar Berhasil');
+      $this->email->message($htmlContent);
+      $name_file = "TTP".$no_ttp;
+      $attched_file = $_SERVER["DOCUMENT_ROOT"]."/pelatihan_ppa/ttp/$name_file.pdf";
+      //Send email
+      $this->email->attach($attched_file);
+      if($this->email->send())
+      {
+          echo 'Email_sent.';
+      }
+    else
+       {
+        show_error($this->email->print_debugger());
+       }
+    }
 
     /* Data Keuangan */
     public function loadtahunpelatihan(){
@@ -855,7 +853,6 @@ class Keuangan extends CI_Controller
         );
         $this->output->set_output(json_encode($jsonArr));
     }
-    
-
 }
+
 ?>

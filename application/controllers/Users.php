@@ -7,12 +7,19 @@ class Users extends CI_Controller{
     var $title  =   "Users";
     function __construct() {
         parent::__construct();
+        date_default_timezone_set("Asia/Jakarta");
+        $this->load->model('M_masterdata');
+        $user = $this->ion_auth->user()->row();
     }
     
     function index()
     {
+        $user = $this->ion_auth->user()->row();
+        $data['lvl_admin'] = $user->id_lvl_admin;
         $data['title']=  $this->title;
-        $data['record']=  $this->db->get($this->tables)->result();
+        //$data['record']=  $this->db->get($this->tables)->result();
+        $data['record']=  $this->M_masterdata->get_loaddataadmin();
+
 	$this->template->load('template', $this->folder.'/view',$data);
     }
     
@@ -53,18 +60,18 @@ class Users extends CI_Controller{
     {
         if(isset($_POST['submit']))
         {
-            $username  =   $this->input->post('username');
+            //$username  =   $this->input->post('username');
 			$email     =   $this->input->post('email');
             $password  =   $this->input->post('password');
-            $group_id     =   $this->input->post('group_id');
+            $id_lvl_admin     =   $this->input->post('id_lvl_admin');
             //$prodi     =   $this->input->post('prodi');
-            if($group_id==2)
+            if($id_lvl_admin==2)
             {
-                 $data   =   array('username'=>$username,'password'=>md5($password),'group_id'=>$this->ion_auth->get_users_groups()->row()->id,'keterangan'=>$prodi);
+                 $data  =  array('email'=>$email,'password'=>md5($password),'id_lvl_admin'=>$this->ion_auth->get_users_groups()->row()->id,'keterangan'=>$prodi);
             }
             else
             {
-                 $data   =   array('username'=>$username,'password'=>md5($password),'group_id'=>$this->ion_auth->get_users_groups()->row()->id);
+                 $data  = array('email'=>$email,'password'=>md5($password),'id_lvl_admin'=>$this->ion_auth->get_users_groups()->row()->id);
             }
             $this->db->insert($this->tables,$data);
             redirect($this->uri->segment(1));
@@ -72,6 +79,7 @@ class Users extends CI_Controller{
         else
         {
             $data['title']=  $this->title;
+            //$this->template->load('template', 'auth/create_user',$data);
             $this->template->load('template', $this->folder.'/post',$data);
         }
     }
@@ -93,6 +101,7 @@ class Users extends CI_Controller{
             $id            =  $this->uri->segment(3);
             $data['r']     =  $this->mcrud->getByID($this->tables,  $this->pk,$id)->row_array();
             $this->template->load('template', $this->folder.'/edit',$data);
+            //$this->template->load('template', 'auth/edit_user',$data);
         }
     }
     function delete()

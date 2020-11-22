@@ -29,38 +29,74 @@ $(document).ready(function(){
 });
 </script>
 <?php
-echo form_open_multipart($this->uri->segment(1).'/post');
-$level=array(1=>'Admin',2=>'Staf Admin',3=>'Keuangan',4=>'Peserta');
+echo form_open_multipart("auth/create_user");
+//echo form_open_multipart($this->uri->segment(1).'/post');
+$level=array(1=>'Super Admin',2=>'Staf Administrasi',3=>'Staff Keuangan',4=>'Boss');
 $class      ="class='form-control' id='level'";
 ?>
  <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Entry Record</h3>
   </div>
+    <?php
+    echo isset($message) ? $message : FALSE;
+    ?>
   <div class="panel-body">
 <table class="table table-bordered">
-    <tr>
+    <!-- <tr>
     <td width="150">Username</td><td>
         <?php echo inputan('text', 'username','col-sm-3','Username ..', 1, '','');?>
     </td>
+    </tr> -->
+    <tr>
+    <td width="150">First name</td><td>
+    <?php echo inputan('text', 'first_name','col-sm-3','First name ..', 1, '','');?>
+    </td>
+    </tr>
+    <tr>
+    <td width="150">Last name</td><td>
+    <?php echo inputan('text', 'last_name','col-sm-3','Last Name ..', 1, '','');?>
+    </td>
+    </tr>
+    <tr>
+    <td width="150">Company name</td><td>
+    <?php echo inputan('text', 'company','col-sm-3','Company ..', 1, '','');?>
+    </td>
     </tr>
 	<tr>
+    <tr>
+    <td width="150">Phone</td><td>
+        <?php echo inputan('number', 'phone','col-sm-3','Phone ..', 1, '','');?>
+    </td>
+    </tr>
+    <tr>
+    <tr>
     <td width="150">Email</td><td>
         <?php echo inputan('text', 'email','col-sm-3','Email ..', 1, '','');?>
     </td>
     </tr>
+    
     <tr>
-        <tr>
     <td width="150">Password</td><td>
         <?php echo inputan('password', 'password','col-sm-3','Password ..', 1, '','');?>
     </td>
     </tr>
     <tr>
+    <td width="150">Confirm Password: </td><td>
+        <?php echo inputan('password', 'password_confirm','col-sm-3','Password ..', 1, '','');?>
+    </td>
+    </tr>
+    
+    <tr>
     <td width="150">Level</td><td>
         <div class="col-sm-3">
-        <?php echo form_dropdown('level',$level,'',$class);?>
+        <?php echo form_dropdown('id_lvl_admin',$level,'',$class);?>
         </div>
-        
+    </td>
+    </tr>
+    <tr id="jurusan">
+    <td width="150">Jurusan</td><td>
+    <?php echo inputan('admin_jurusan', 'admin_jurusan','col-sm-3','jurusan ..', '', '','');?>
     </td>
     </tr>
     <tr>

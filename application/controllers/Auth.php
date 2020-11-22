@@ -1,7 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
-
+	var $folder =   "users";
+    var $tables =   "users";
+    var $pk     =   "id";
+    var $title  =   "Users";
 	function __construct()
 	{
 		parent::__construct();
@@ -19,7 +22,6 @@ class Auth extends CI_Controller {
 	// redirect if needed, otherwise display the user list
 	function index()
 	{
-
 		if (!$this->ion_auth->logged_in())
 		{
 			// redirect them to the login page
@@ -405,7 +407,6 @@ class Auth extends CI_Controller {
 					$this->ion_auth->deactivate($id);
 				}
 			}
-
 			// redirect them back to the auth page
 			redirect('auth', 'refresh');
 		}
@@ -452,15 +453,18 @@ class Auth extends CI_Controller {
                 'first_name' => $this->input->post('first_name'),
                 'last_name'  => $this->input->post('last_name'),
                 'company'    => $this->input->post('company'),
-                'phone'      => $this->input->post('phone'),
-            );
+				'phone'      => $this->input->post('phone'),
+				'id_lvl_admin' => $this->input->post('id_lvl_admin'),
+				'admin_jurusan' => ($_POST['admin_jurusan'] != '' ? $this->input->post('admin_jurusan') : Null),
+			);
         }
         if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data))
         {
             // check to see if we are creating the user
             // redirect them back to the admin page
-            $this->session->set_flashdata('message', $this->ion_auth->messages());
-            redirect("auth", 'refresh');
+			$message = $this->session->set_flashdata('message', $this->ion_auth->messages());
+			redirect('users', 'refresh', $message);
+			//$this->email/activate.tpl.php();
         }
         else
         {
@@ -515,9 +519,18 @@ class Auth extends CI_Controller {
                 'id'    => 'password_confirm',
                 'type'  => 'password',
                 'value' => $this->form_validation->set_value('password_confirm'),
-            );
+			);
 
-            $this->_render_page('auth/create_user', $this->data);
+			$message = $this->data;
+			
+			echo "<script type='text/javascript'>alert('register gagal');</script>";
+
+			//$this->_render_page('auth/create_user', $this->data);
+			//$this->_render_page('template','users/post', $this->data);
+			//redirect('users/post', 'refresh',$message);
+			$this->template->load('template', 'users/post', $message);
+			
+			
         }
     }
 
@@ -535,6 +548,7 @@ class Auth extends CI_Controller {
 		$groups=$this->ion_auth->groups()->result_array();
 		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
 
+		//print_r($currentGroups);die();
 		// validate form input
 		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'required');
 		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'required');
@@ -563,6 +577,8 @@ class Auth extends CI_Controller {
 					'last_name'  => $this->input->post('last_name'),
 					'company'    => $this->input->post('company'),
 					'phone'      => $this->input->post('phone'),
+					'id_lvl_admin'      => $this->input->post('id_lvl_admin'),
+					'admin_jurusan'      => $this->input->post('admin_jurusan'),
 				);
 
 				// update the password if it was posted
@@ -570,34 +586,33 @@ class Auth extends CI_Controller {
 				{
 					$data['password'] = $this->input->post('password');
 				}
+				// // Only allow updating groups if user is admin
+				// if ($this->ion_auth->is_admin())
+				// {
+				// 	//Update the groups user belongs to
+				// 	$groupData = $this->input->post('groups');
 
+				// 	if (isset($groupData) && !empty($groupData)) {
 
+				// 		$this->ion_auth->remove_from_group('', $id);
 
-				// Only allow updating groups if user is admin
-				if ($this->ion_auth->is_admin())
-				{
-					//Update the groups user belongs to
-					$groupData = $this->input->post('groups');
+				// 		foreach ($groupData as $grp) {
+				// 			$this->ion_auth->add_to_group($grp, $id);
+				// 		}
 
-					if (isset($groupData) && !empty($groupData)) {
-
-						$this->ion_auth->remove_from_group('', $id);
-
-						foreach ($groupData as $grp) {
-							$this->ion_auth->add_to_group($grp, $id);
-						}
-
-					}
-				}
+				// 	}
+				// }
 
 			// check to see if we are updating the user
 			   if($this->ion_auth->update($user->id, $data))
 			    {
 			    	// redirect them back to the admin page if admin, or to the base url if non admin
-				    $this->session->set_flashdata('message', $this->ion_auth->messages() );
+				    $message = $this->session->set_flashdata('message', $this->ion_auth->messages() );
 				    if ($this->ion_auth->is_admin())
 					{
-						redirect('auth', 'refresh');
+						//redirect('auth', 'refresh');
+						//redirect('users', 'refresh');
+						redirect('users', 'refresh', $message);
 					}
 					else
 					{
@@ -611,7 +626,8 @@ class Auth extends CI_Controller {
 				    $this->session->set_flashdata('message', $this->ion_auth->errors() );
 				    if ($this->ion_auth->is_admin())
 					{
-						redirect('auth', 'refresh');
+						//redirect('auth', 'refresh');
+						redirect('users', 'refresh');
 					}
 					else
 					{
@@ -669,7 +685,10 @@ class Auth extends CI_Controller {
 			'type' => 'password'
 		);
 
-		$this->_render_page('auth/edit_user', $this->data);
+		//$this->_render_page('auth/edit_user', $this->data);
+		$message = $this->data;
+		//echo "<script type='text/javascript'>alert('register gagal');</script>";
+		$this->template->load('template', 'users/edit', $message);
 	}
 
 	// create a new group
@@ -819,11 +838,6 @@ class Auth extends CI_Controller {
 	}
 
 	public function pushnotif(){
-       // $data['session_user'] = $this->session_user;
-		//$id_akun_peserta = $data['session_user']['id_akun_peserta'];
-
-		//$data_session = $this->session->userdata;
-
 		if($_POST["view"] != ''){
             //$pushnotif= $this->M_masterdata->get_pushnotif($id_akun_peserta);
             $updateData=array(
@@ -841,6 +855,282 @@ class Auth extends CI_Controller {
             'notif'=>$shortnotif
         );
         $this->output->set_output(json_encode($jsonArr));
-    }
+	}
 
+	/** BLAST EMAIL REMINDER */
+	public function reminderNow(){
+		$datenow = date('Y-m-d');
+		//$datenow = '2018-05-03';
+		
+		$data_reminder_now = $this->M_masterdata->data_reminderNow($datenow);
+		print_r($data_reminder_now);die();
+		//$this->blastEmailNow($data_reminder_now);
+	}
+
+	public function reminderPiutang(){
+		$datenow = date('Y-m-d');
+		//$datenow = '2018-05-03';
+		$data_reminder_piutang = $this->M_masterdata->data_reminderPiutang($datenow);
+		$this->blastEmailPiutang($data_reminder_piutang);
+	}
+
+	public function reminder7Days(){
+		$datenow = date('Y-m-d');
+		//$datenow = '2018-02-24';
+		
+		$dateReminder = $this->M_masterdata->get_dateReminder($datenow);
+		
+		if(isset($dateReminder[0])){
+			$tgl_mulai = $dateReminder[0]->tgl_mulai;
+			$days7 = date('Y-m-d', strtotime($tgl_mulai. ' - 7 days'));
+			if($datenow == $days7){
+				echo $datenow.' = '.$days7;
+				echo ' H -7';
+				$date_reminder_7days = $this->M_masterdata->data_reminder7Days($tgl_mulai);
+				$this->blastEmailReminder($date_reminder_7days);
+				//print_r($date_reminder_7days);die();
+			} elseif ($datenow == $tgl_mulai) {
+				echo $datenow.' = '.$tgl_mulai;
+				echo ' HARI H';
+				$date_reminder_7days = $this->M_masterdata->data_reminder7Days($tgl_mulai);
+				$this->blastEmailReminder($date_reminder_7days);
+				//print_r($date_reminder_7days);die();
+			} elseif ($datenow < $tgl_mulai) {
+				echo $datenow.' = '.$days7;
+				echo ' Tidak ada reminder';
+				// $date_reminder_7days = $this->M_masterdata->data_reminder7Days($tgl_mulai);
+				// $this->blastEmailReminder($date_reminder_7days);
+			}
+		}
+		else {
+		  echo 'DataKosong';
+		  $this->reminderPiutang();
+		}
+	}
+
+	public function blastEmailNow($data_reminder_now){
+		//Load email library
+		$this->load->library('email');
+		$this->load->library('encrypt');
+  
+		// SMTP & mail configuration
+	  //   $config = array(
+	  //       'protocol'  => 'POP3',
+	  //       'smtp_host' => 'mail.ppa-febui.com',
+	  //       'smtp_port' => 995,
+	  //       'smtp_user' => 'admin@ppa-febui.com',
+	  //       'smtp_pass' => 'febui@2018',
+	  //       'mailtype'  => 'html',
+	  //       'charset'   => 'utf-8'
+	  //   );
+  
+		$config = Array(
+			'protocol' => 'smtp',
+			'smtp_host' => 'ssl://smtp.googlemail.com',
+			'smtp_port' => 465,
+			'smtp_user' => 'littlebossid.official@gmail.com', // change it to yours
+			'smtp_pass' => 'L1ttl3B055', // change it to yours
+			'mailtype' => 'html',
+			'charset' => 'iso-8859-1',
+			'newline' => "\r\n",
+			'wordwrap' => TRUE
+		);
+		$this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->set_newline("\r\n");
+
+		foreach($data_reminder_now as $d){
+  
+		$htmlContent = "Dear, ".$d->nama."<br><br>";
+		$htmlContent .= "Anda belum melunasi transaksi pembayaran pada pelatihan ".$d->nama_pelatihan." <br>";
+		$htmlContent .= "Silahkan untuk melunasi transaksi pelatihan anda sebelum tanggal ".$d->tgl_mulai.".<br><br>";
+		$htmlContent .= '<a href="http://www.ppa-febui.com/peserta/">Web PPA UI Peserta</a><br> <br>';
+  
+		$this->email->to($d->email);
+		$this->email->from('admin@ppa-febui.com','PPA UI ADMIN');
+		$this->email->subject('Tagihan Pelatihan '.$d->kd_angkatan.'');
+		$this->email->message($htmlContent);
+		if($this->email->send())
+		{
+			return true;
+		}
+	  	else
+		{
+		  show_error($this->email->print_debugger());
+		}
+		}
+	}
+
+	public function blastEmailReminder($date_reminder_7days){
+		//Load email library
+		$this->load->library('email');
+		$this->load->library('encrypt');
+  
+		// SMTP & mail configuration
+	  //   $config = array(
+	  //       'protocol'  => 'POP3',
+	  //       'smtp_host' => 'mail.ppa-febui.com',
+	  //       'smtp_port' => 995,
+	  //       'smtp_user' => 'admin@ppa-febui.com',
+	  //       'smtp_pass' => 'febui@2018',
+	  //       'mailtype'  => 'html',
+	  //       'charset'   => 'utf-8'
+	  //   );
+  
+		$config = Array(
+			'protocol' => 'smtp',
+			'smtp_host' => 'ssl://smtp.googlemail.com',
+			'smtp_port' => 465,
+			'smtp_user' => 'littlebossid.official@gmail.com', // change it to yours
+			'smtp_pass' => 'L1ttl3B055', // change it to yours
+			'mailtype' => 'html',
+			'charset' => 'iso-8859-1',
+			'newline' => "\r\n",
+			'wordwrap' => TRUE
+		);
+		$this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->set_newline("\r\n");
+
+		foreach($date_reminder_7days as $d){
+		$tgl_mulai = date('d-m-Y', strtotime($d->tgl_mulai));
+  
+		$htmlContent = "Dear, ".$d->nama."<br><br>";
+		$htmlContent .= "Anda belum melunasi transaksi pembayaran pada pelatihan ".$d->nama_pelatihan." <br>";
+		$htmlContent .= "Silahkan untuk melunasi transaksi pelatihan anda sebelum tanggal ".$tgl_mulai.".<br><br>";
+		$htmlContent .= '<a href="http://www.ppa-febui.com/peserta/">Web PPA UI Peserta</a><br> <br>';
+  
+		$this->email->to($d->email);
+		$this->email->from('admin@ppa-febui.com','PPA UI ADMIN');
+		$this->email->subject('Tagihan Pelatihan '.$d->kd_angkatan.'');
+		$this->email->message($htmlContent);
+		if($this->email->send())
+		{
+			return true;
+		}
+	  	else
+		{
+		  show_error($this->email->print_debugger());
+		}
+		}
+	}
+
+	public function blastEmailPiutang($date_reminder_piutang){
+		//Load email library
+		$this->load->library('email');
+		$this->load->library('encrypt');
+  
+		// SMTP & mail configuration
+	  //   $config = array(
+	  //       'protocol'  => 'POP3',
+	  //       'smtp_host' => 'mail.ppa-febui.com',
+	  //       'smtp_port' => 995,
+	  //       'smtp_user' => 'admin@ppa-febui.com',
+	  //       'smtp_pass' => 'febui@2018',
+	  //       'mailtype'  => 'html',
+	  //       'charset'   => 'utf-8'
+	  //   );
+  
+		$config = Array(
+			'protocol' => 'smtp',
+			'smtp_host' => 'ssl://smtp.googlemail.com',
+			'smtp_port' => 465,
+			'smtp_user' => 'littlebossid.official@gmail.com', // change it to yours
+			'smtp_pass' => 'L1ttl3B055', // change it to yours
+			'mailtype' => 'html',
+			'charset' => 'iso-8859-1',
+			'newline' => "\r\n",
+			'wordwrap' => TRUE
+		);
+		$this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->set_newline("\r\n");
+
+		foreach($date_reminder_piutang as $d){
+		$tgl_mulai = date('d-m-Y', strtotime($d->tgl_mulai));
+
+		$htmlContent = "Dear, ".$d->nama."<br><br>";
+		$htmlContent .= "Anda belum melunasi transaksi pembayaran pada pelatihan ".$d->nama_pelatihan." dan sudah melewati batas tanggal pelatihan di mulai yaitu pada tanggal ".$tgl_mulai." <br>";
+		$htmlContent .= "Silahkan untuk melunasi piutang transaksi pelatihan anda.<br><br>";
+		$htmlContent .= '<a href="http://www.ppa-febui.com/peserta/">Web PPA UI Peserta</a><br> <br>';
+  
+		$this->email->to($d->email);
+		$this->email->from('admin@ppa-febui.com','PPA UI ADMIN');
+		$this->email->subject('Tagihan Piutang Pelatihan '.$d->kd_angkatan.'');
+		$this->email->message($htmlContent);
+		if($this->email->send())
+		{
+			return true;
+		}
+	  	else
+		{
+		  show_error($this->email->print_debugger());
+		}
+		}
+	}
+
+	/** END BLAST EMAIL REMINDER */
+	
+
+	/** TESTING */
+	public function testReminder(){
+		$this->testEmailReminder();
+	}
+
+	public function testEmailReminder()
+    {
+      //Load email library
+      $this->load->library('email');
+      $this->load->library('encrypt');
+
+      // SMTP & mail configuration
+    //   $config = array(
+    //       'protocol'  => 'POP3',
+    //       'smtp_host' => 'mail.ppa-febui.com',
+    //       'smtp_port' => 995,
+    //       'smtp_user' => 'admin@ppa-febui.com',
+    //       'smtp_pass' => 'febui@2018',
+    //       'mailtype'  => 'html',
+    //       'charset'   => 'utf-8'
+    //   );
+
+    $config = Array(
+        'protocol' => 'smtp',
+        'smtp_host' => 'ssl://smtp.googlemail.com',
+        'smtp_port' => 465,
+        'smtp_user' => 'littlebossid.official@gmail.com', // change it to yours
+        'smtp_pass' => 'L1ttl3B055', // change it to yours
+        'mailtype' => 'html',
+        'charset' => 'iso-8859-1',
+        'newline' => "\r\n",
+        'wordwrap' => TRUE
+    );
+      $this->email->initialize($config);
+      $this->email->set_mailtype("html");
+      $this->email->set_newline("\r\n");
+
+      $htmlContent = "Dear, Peserta<br><br>";
+      $htmlContent .= 'Anda belum melunasi transaksi pada pelatihan CPA Review <br>';
+     
+      $htmlContent .= 'Silahkan untuk melunasi transaksi pelatihan anda.<br><br>';
+	  
+	  $htmlContent .= '<a href="http://www.ppa-febui.com/peserta/">Web PPA UI Peserta</a><br> <br>';
+
+      $this->email->to('drewztu@gmail.com');
+      $this->email->from('info@ppa-ui.divrow.com','PPA UI ADMIN');
+      $this->email->subject('Test Reminder Tagihan');
+      $this->email->message($htmlContent);
+      //$name_file = "TTP".$no_ttp;
+      //$attched_file = $_SERVER["DOCUMENT_ROOT"]."/pelatihan_ppa/ttp/$name_file.pdf";
+      //Send email
+      //$this->email->attach($attched_file);
+      if($this->email->send())
+      {
+		  return true;
+      }
+    else
+       {
+        show_error($this->email->print_debugger());
+       }
+    }
 }
