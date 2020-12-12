@@ -567,12 +567,13 @@ $(document).ready(function(){
 });
 
 function loadtahunpelatihan(){
-	var url='<?php echo base_url();?>Peserta/loadtahunpelatihan';
+	var url='<?= base_url()?>Peserta/loadtahunpelatihan';
 	$.ajax({
-			type  : 'POST',
+			type  : 'GET',
 			url   : url,
 			dataType: 'JSON',
 			beforeSend: function (){
+
 			},
 			success: function(data) {
 				$.each(data, function(i, data) {
@@ -818,7 +819,8 @@ function dataDocument(id){
 		  		var nama = '';
           var nama_pelatiahan = '';
 					var jns_pembayaran = '';
-					var base_url = 'http://localhost/ppaui_peserta/';
+          var url = window.location.pathname.split('/');
+					var base_url = window.location.protocol + "//" + window.location.host + '/' + url[1] + '/';
 					var file_smp = '';
 					var file_gl = '';
           
@@ -1011,7 +1013,8 @@ function dataDaftar(id){
           var pekerjaan = '';
           var no_ktp = '';
 					var ktp = '';
-					var base_url = 'http://localhost/ppaui_peserta/';
+					var url = window.location.pathname.split('/');
+					var base_url = window.location.protocol + "//" + window.location.host + '/' + url[1] + '/';
 
 					var nama_kantor = '';
 					var bidang_usaha = '';

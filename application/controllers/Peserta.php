@@ -544,8 +544,8 @@ class Peserta extends CI_Controller{
 	// ==================ANDRE=================================
 
 	public function loadtahunpelatihan(){
-		$result=$this->M_masterdata->get_loadtahunpelatihan();
-		echo json_encode($result);
+		$result = $this->M_masterdata->get_loadtahunpelatihan();
+		$this->output->set_output(json_encode($result));
 	}
 
 	public function loadpelatihan(){

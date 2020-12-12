@@ -205,7 +205,8 @@
           var jenis_pembayaran = '';
           var sts_pembayaran = '';
           var bukti_transfer= '';
-          var base_url = 'http://localhost/ppaui_peserta/';
+          var url = window.location.pathname.split('/');
+					var base_url = window.location.protocol + "//" + window.location.host + '/' + url[1];
           
           if(data.id_konfirmasi_bayar.length>0){
             $.each(data.id_konfirmasi_bayar,function(a,b){
@@ -226,7 +227,7 @@
           } else{
             $(modalid+' #sts_pembayaran').show();
           }
-          $('#bukti_transfer').html('<img src="'+base_url+'uploads/buktibayar/'+bukti_transfer+'" class="img-responsive">');
+          $('#bukti_transfer').html('<img src="'+base_url+'/uploads/bukti_bayar/'+bukti_transfer+'" class="img-responsive">');
           $(modalid+' #id_peserta_daftar').empty().html(id_peserta_daftar);
           $(modalid+' #nama').val(nama);
           $(modalid+' #nama_pelatihan').val(nama_pelatihan);
