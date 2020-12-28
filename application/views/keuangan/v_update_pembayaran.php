@@ -176,7 +176,10 @@
            el+="</tbody></table></div>";
            $("#div_tbl_konfirmasi").empty().html(el);
            $('#datatable-fixed-header').DataTable({
-           
+              dom: 'Bfrtip',
+              buttons: [
+                'excel'
+              ]
            });
         }
       })

@@ -171,7 +171,7 @@ $(document).ready(function(){
   $('#tbl-master-pelatihan').DataTable( {
         dom: 'Bfrtip',
         buttons: [
-          'csv', 'excel'
+          'excel'
         ]
     } );
 });

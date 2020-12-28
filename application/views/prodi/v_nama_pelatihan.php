@@ -54,7 +54,7 @@ $(document).ready(function(){
     $('#tbl-pelatihan').DataTable( {
         dom: 'Bfrtip',
         buttons: [
-          'csv'
+          'excel'
         ]
     } );
 });

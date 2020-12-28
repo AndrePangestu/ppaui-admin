@@ -67,7 +67,7 @@ $(document).ready(function(){
     $('#tbl-frontoffice').DataTable( {
         dom: 'Bfrtip',
         buttons: [
-          'csv'
+          'excel'
         ]
     } );
 });

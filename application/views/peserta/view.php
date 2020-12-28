@@ -564,13 +564,13 @@ $(document).ready(function(){
 	$('#tblpeserta_show').DataTable({
     dom: 'Bfrtip',
     buttons: [
-      'csv'
+      'excel'
     ]
   });
 	$('#tblpeserta_btl_show').DataTable({
     dom: 'Bfrtip',
     buttons: [
-      'csv'
+      'excel'
     ]
   });
 

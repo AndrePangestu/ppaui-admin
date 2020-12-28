@@ -22,11 +22,13 @@ if (!$this->ion_auth->logged_in())
 
         
         <!-- Datatables -->
-    <link href="<?php echo base_url();?>assets/dataTables/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="<?php echo base_url();?>assets/dataTables/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/dataTables/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/dataTables/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url();?>assets/dataTables/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-    <link href="<?php echo base_url();?>assets/dataTables/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>assets/dataTables/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" rel="stylesheet">
 
         <script src="<?php echo base_url()?>uadmin/js/vendor/modernizr-2.7.1-respond-1.4.2.min.js"></script>
   </head>
@@ -171,8 +173,18 @@ if (!$this->ion_auth->logged_in())
 
     <script src="<?php echo base_url();?>assets/js/jquery.validate.min.js"></script>
     <script src="<?php echo base_url();?>assets/js/jquery.easy-autocomplete.min.js"></script>
+    
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>                 -->
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>                
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>                
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>                
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>                
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>                
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>                
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>                
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>                             
 
-  <script src="<?php echo base_url();?>assets/dataTables/datatables.net/js/jquery.dataTables.min.js"></script>
+  <!-- <script src="<?php echo base_url();?>assets/dataTables/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
@@ -183,7 +195,7 @@ if (!$this->ion_auth->logged_in())
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
   <script src="<?php echo base_url();?>assets/dataTables/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-  <script src="<?php echo base_url();?>assets/dataTables/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="<?php echo base_url();?>assets/dataTables/datatables.net-scroller/js/dataTables.scroller.min.js"></script> -->
   <script src="<?php echo base_url();?>assets/js/custom.js"></script>
   <script src="<?php echo base_url();?>assets/js/jquery.colorbox.js"></script>
 

@@ -51,7 +51,7 @@ $(document).ready(function(){
     $('#tbl-faq').DataTable( {
         dom: 'Bfrtip',
         buttons: [
-          'csv'
+          'excel'
         ]
     } );
 });

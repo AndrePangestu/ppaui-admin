@@ -68,7 +68,7 @@ $(document).ready(function(){
     $('#table-user').DataTable({
         dom: 'Bfrtip',
         buttons: [
-        'csv'
+        'excel'
         ]
     });
 
