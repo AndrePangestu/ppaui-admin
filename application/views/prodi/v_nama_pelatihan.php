@@ -11,7 +11,7 @@
 echo anchor($this->uri->segment(1).'/addNamaPelatihan',"<i class='fa fa-pencil-square-o'></i> Tambah Data",array('class'=>'btn btn-danger   btn-sm','title'=>'Tambah Data'))
 ?>
       
-<table id="example-datatables" class="table table-striped table-bordered table-hover">
+<table id="tbl-pelatihan" class="table table-striped table-bordered table-hover">
     <thead>
         <tr>
             <th width="10"></th>
@@ -51,7 +51,12 @@ echo anchor($this->uri->segment(1).'/addNamaPelatihan',"<i class='fa fa-pencil-s
 <script src="<?php echo base_url()?>uadmin/js/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-   
+    $('#tbl-pelatihan').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+          'csv'
+        ]
+    } );
 });
 
 </script>

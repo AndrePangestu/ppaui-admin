@@ -154,6 +154,14 @@ echo form_open_multipart($this->uri->segment(1).'/post');
         </td>
     </tr>
     <tr>
+        <td width="150">Discount %</td>
+        <td>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <input type='text' id='discount' name='discount' class="form-control">
+            </div>
+        </td>
+    </tr>
+    <tr>
          <td></td>
          <td colspan="2"> 
             <input type="submit" name="submit" value="simpan" class="btn btn-danger  btn-sm">

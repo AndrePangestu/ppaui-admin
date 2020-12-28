@@ -16,7 +16,7 @@ if($lvl_admin == 1){
     
 }
 ?>
-                    <table id="example-datatables" class="table table-striped table-bordered table-hover">
+                    <table id="table-user" class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th></th>
@@ -62,3 +62,15 @@ if($lvl_admin == 1){
                         </tbody>
                     </table>
                     <!-- END Datatables -->
+<script src="<?php echo base_url()?>uadmin/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#table-user').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+        'csv'
+        ]
+    });
+
+});
+</script>

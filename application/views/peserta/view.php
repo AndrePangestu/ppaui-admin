@@ -561,8 +561,18 @@
 $(document).ready(function(){
 	loadtahunpelatihan();
 
-	$('#tblpeserta_show').DataTable({});
-	$('#tblpeserta_btl_show').DataTable({});
+	$('#tblpeserta_show').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+      'csv'
+    ]
+  });
+	$('#tblpeserta_btl_show').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+      'csv'
+    ]
+  });
 
 });
 

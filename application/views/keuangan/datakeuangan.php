@@ -287,6 +287,10 @@
 $(document).ready(function(){
 	loadtahunpelatihan();
 	$('#tblpeserta_show').DataTable({
+		dom: 'Bfrtip',
+		buttons: [
+		'csv'
+		]
 	});
 
 });

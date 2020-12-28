@@ -156,6 +156,12 @@ echo "<input type='hidden' name='id' value='$r[id_m_pelatihan]'>";
             </div>
         </td>
     </tr>
+    <tr>
+        <td width="150">Discount %</td>
+        <td>
+            <?php echo inputan('text', 'discount','col-sm-6','...', 0, $r['discount'],'');?>
+        </td>
+    </tr>
 
     <tr>
          <td></td><td colspan="2"> 
