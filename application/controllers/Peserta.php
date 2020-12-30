@@ -4,7 +4,9 @@ class Peserta extends CI_Controller{
     var $folder =   "peserta";
     var $tables =   "tbl_peserta_daftar";
     var $pk     =   "id_peserta_daftar";
-    var $title  =   "Daftar Peserta";
+	var $title  =   "Daftar Peserta";
+	
+	var $folder2 = "validasiadmin";
     
     function __construct() {
 		parent::__construct();
@@ -662,7 +664,125 @@ class Peserta extends CI_Controller{
             'id_peserta_daftar'=>$data['id_peserta_daftar']
         );
         $this->output->set_output(json_encode($jsonArr));
-    }
+	}
+	
+	public function validasiadmin()
+	{
+		$data['title']	=  "Validasi Admin";
+        $data['desc']	=  "";
+        $this->template->load('template', $this->folder2.'/view',$data);
+	}
+
+	public function loadvalidasi()
+    {
+        $search= $this->M_masterdata->get_loadvalidasi();
+        $jsonArr=array(
+            'rows'=>$search
+        );
+        echo json_encode($jsonArr);
+	}
+	
+	public function updatevalidasi()
+	{
+		$id = $this->uri->segment(3);
+
+		$data['title'] = "Form Validasi";
+		$data['desc'] = "";
+		$data['lengkapdaftar'] = $this->M_masterdata->get_lengkapdaftar($id);
+		
+		$this->template->load('template', $this->folder2.'/updatevalidasi', $data);
+	}
+
+	public function approvevalidasi()
+	{
+		if(!empty($_POST['jenis_pembayaran']))
+		{
+		  	$jns_bayar = $this->input->post('jenis_pembayaran');
+  
+		  	if($jns_bayar == "perusahaan") {
+				// smp upload
+				$config = array();
+				$config['upload_path'] = './uploads/smp/';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|';
+				$config['max_size'] = '100000';
+				$config['encrypt_name'] = TRUE;
+				$this->load->library('upload', $config, 'filesmp'); // Create custom object for cover upload
+				$this->filesmp->initialize($config);
+				$upload_cover = $this->filesmp->do_upload('file_smp2');
+				$upload_data = $this->filesmp->data();
+				$file_name_smp = $upload_data['file_name'];
+  
+				// gl upload
+				$config = array();
+				$config['upload_path'] = './uploads/gl/';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|';
+				$config['max_size'] = '100000';
+				$config['encrypt_name'] = TRUE;
+				$this->load->library('upload', $config, 'filegl'); // Create custom object for cover upload
+				$this->filegl->initialize($config);
+				$upload_cover = $this->filegl->do_upload('file_gl');
+				$upload_data = $this->filegl->data();
+				$file_name_gl = $upload_data['file_name'];
+  
+				$id_peserta_daftar = $this->input->post('id_peserta_daftar');
+				$updateData=array(
+					"info" => "Berkas Lengkap",
+					// "file_smp"=>$file_name_smp,
+					// "file_gl"=>$file_name_gl,
+					"status_validasi" => 1,
+				);
+				$this->db->where("id_peserta_daftar",$id_peserta_daftar);
+				$this->db->update("tbl_peserta_daftar",$updateData);  
+  
+				// $datanotif = array(
+				// 	'id_akun_peserta    ' => $id_akun_peserta,
+				// 	'title' =>  'Upload Berkas SMP & GL Berhasil',
+				// 	'notification' => 'Klik untuk melihat melakukan transaksi bayar',
+				// 	'link' => 'Dashboard/tagihan',
+				// 	'from_user' => 'Admin',
+				// 	'status' => 1
+				// );
+			  	// $this->db->insert('tbl_notif', $datanotif);
+		  	} elseif($jns_bayar == "cicilan"){
+				// smp upload
+				$config = array();
+				$config['upload_path'] = './uploads/smp/';
+				$config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|';
+				$config['max_size'] = '100000';
+				$config['encrypt_name'] = TRUE;
+				$this->load->library('upload', $config, 'filesmp1'); // Create custom object for cover upload
+				$this->filesmp1->initialize($config);
+				$upload_cover = $this->filesmp1->do_upload('file_smp1');
+				$upload_data = $this->filesmp1->data();
+				$file_name_smp = $upload_data['file_name'];
+	
+				$id_peserta_daftar = $this->input->post('id_peserta_daftar');
+				$updateData=array(
+					"info" => "Berkas Lengkap",
+					"file_smp"=>$file_name_smp,
+					"status_validasi" => 1,
+				);
+				print_r($updateData);
+				$this->db->where("id_peserta_daftar",$id_peserta_daftar);
+				$this->db->update("tbl_peserta_daftar",$updateData);  
+	
+				// $datanotif = array(
+				// 	'id_akun_peserta' => $id_akun_peserta,
+				// 	'title' =>  'Upload Berkas SMP Berhasil',
+				// 	'notification' => 'Klik untuk melihat melakukan transaksi bayar',
+				// 	'link' => 'Dashboard/tagihan',
+				// 	'from_user' => 'Admin',
+				// 	'status' => 1
+				// );
+				// $this->db->insert('tbl_notif', $datanotif);
+			}else {
+				echo "Transaksi tidak ada";
+			}
+		  	echo "berhasil";
+		} else {
+		  echo "gagal";
+		}
+	}
 	
 
 }

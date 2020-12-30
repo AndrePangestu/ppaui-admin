@@ -31,6 +31,29 @@ class M_masterdata extends CI_Model{
         return $result;
     }
 
+    function get_loadvalidasi(){
+        $sql = "SELECT a.*,b.jenis_pembayaran, c.nama_pelatihan, d.nama, b.status_pembayaran, b.keterangan, b.status_validasi
+                FROM tbl_konfirmasi_bayar a
+                LEFT JOIN tbl_peserta_daftar b ON a.id_peserta_daftar = b.id_peserta_daftar
+                LEFT JOIN tbl_pelatihan_master c ON b.id_m_pelatihan = c.id_m_pelatihan
+                LEFT JOIN tbl_peserta_akun d ON d.id_akun_peserta = a.id_akun_peserta
+                ORDER BY a.id_konfirmasi_bayar DESC";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        return $result;
+    }
+
+    public function get_lengkapdaftar($id) {
+		$sql = "SELECT a.*, b.*, c.nama, c.email, c.agama, c.tgl_lahir, c.tempat_lahir, c.file_foto, c.file_ktp, c.no_ktp, c.jenis_kelamin
+				FROM tbl_peserta_daftar a
+				LEFT JOIN tbl_pelatihan_master b ON a.id_m_pelatihan = b.id_m_pelatihan
+				LEFT JOIN tbl_peserta_akun c ON a.id_akun_peserta = c.id_akun_peserta
+				WHERE id_peserta_daftar = '$id'";
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		return $result;
+	}
+
     /* === BUAT MENU PESERTA === */
 
     /* GET DATAFILE BY ID*/
