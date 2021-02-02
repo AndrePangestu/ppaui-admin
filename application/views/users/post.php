@@ -31,7 +31,7 @@ $(document).ready(function(){
 <?php
 echo form_open_multipart("auth/create_user");
 //echo form_open_multipart($this->uri->segment(1).'/post');
-$level=array(1=>'Super Admin',2=>'Staf Administrasi',3=>'Staff Keuangan',4=>'Boss');
+$level=array(1=>'Super Admin',2=>'Staf Administrasi',3=>'Staff Keuangan',4=>'Supervisor');
 $class      ="class='form-control' id='level'";
 ?>
  <div class="panel panel-default">

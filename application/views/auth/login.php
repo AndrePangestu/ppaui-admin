@@ -74,8 +74,10 @@
 				
 				<?php echo form_close();?>
 
-			<td colspan="2"><div align="center"><?php echo anchor('auth/create_user', lang('index_create_user_link'))?> | 
-			<a href="forgot_password"><?php echo lang('login_forgot_password');?></a></div></td>
+			<td colspan="2"><div align="center">
+        <!-- <?php echo anchor('auth/create_user', lang('index_create_user_link'))?> |  -->
+        <a href="forgot_password"><?php echo lang('login_forgot_password');?></a></div>
+      </td>
 			
           </table>   
           </div>               

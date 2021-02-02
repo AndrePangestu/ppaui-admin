@@ -457,8 +457,13 @@ class Auth extends CI_Controller {
 				'id_lvl_admin' => $this->input->post('id_lvl_admin'),
 				'admin_jurusan' => ($_POST['admin_jurusan'] != '' ? $this->input->post('admin_jurusan') : Null),
 			);
+			$id_lvl_admin = $this->input->post('id_lvl_admin');
+			if($id_lvl_admin != 1){
+				$id_lvl_admin+=1;
+			}
+			$groups = array($id_lvl_admin);
         }
-        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data))
+        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data, $groups))
         {
             // check to see if we are creating the user
             // redirect them back to the admin page
