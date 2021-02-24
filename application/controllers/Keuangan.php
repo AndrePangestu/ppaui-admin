@@ -853,6 +853,21 @@ class Keuangan extends CI_Controller
         );
         $this->output->set_output(json_encode($jsonArr));
     }
+
+    public function historyPembayaran(){
+        $data['title']	=  "History Pembayaran Midtrans";
+        $data['desc']	=  "";
+        $this->template->load('template', $this->folder.'/v_historypembayaran',$data);
+    }
+
+    public function loadhistoryPembayaran()
+    {
+        $search= $this->M_masterdata->get_loadhistoryPembayaran();
+        $jsonArr=array(
+            'rows'=>$search
+        );
+        echo json_encode($jsonArr);
+    }
 }
 
 ?>

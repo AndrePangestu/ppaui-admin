@@ -406,6 +406,15 @@ class M_masterdata extends CI_Model{
 		return $result;
     }
 
+    public function get_loadhistoryPembayaran() {
+        $sql = "SELECT a.*, b.nama
+				FROM tbl_history_midtrans a
+				LEFT JOIN tbl_peserta_akun b ON a.id_akun_peserta = b.id_akun_peserta
+				ORDER BY a.transaction_time DESC";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        return $result;
+  	}
 
 }
 
