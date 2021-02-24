@@ -695,6 +695,8 @@ class Peserta extends CI_Controller{
 
 	public function approvevalidasi()
 	{
+		$discount = $this->input->post('discount');
+		
 		if(!empty($_POST['jenis_pembayaran']))
 		{
 		  	$jns_bayar = $this->input->post('jenis_pembayaran');
@@ -730,6 +732,7 @@ class Peserta extends CI_Controller{
 					// "file_smp"=>$file_name_smp,
 					// "file_gl"=>$file_name_gl,
 					"status_validasi" => 1,
+					"discount" => $discount,
 				);
 				$this->db->where("id_peserta_daftar",$id_peserta_daftar);
 				$this->db->update("tbl_peserta_daftar",$updateData);  
@@ -761,8 +764,8 @@ class Peserta extends CI_Controller{
 					"info" => "Berkas Lengkap",
 					"file_smp"=>$file_name_smp,
 					"status_validasi" => 1,
+					"discount" => $discount,
 				);
-				print_r($updateData);
 				$this->db->where("id_peserta_daftar",$id_peserta_daftar);
 				$this->db->update("tbl_peserta_daftar",$updateData);  
 	
@@ -775,6 +778,16 @@ class Peserta extends CI_Controller{
 				// 	'status' => 1
 				// );
 				// $this->db->insert('tbl_notif', $datanotif);
+			} elseif($jns_bayar == 'lunas'){
+				$id_peserta_daftar = $this->input->post('id_peserta_daftar');
+				$updateData=array(
+					"info" => "Berkas Lengkap",
+					"status_validasi" => 1,
+					"discount" => $discount,
+				);
+				$this->db->where("id_peserta_daftar",$id_peserta_daftar);
+				$this->db->update("tbl_peserta_daftar",$updateData);
+			
 			}else {
 				echo "Transaksi tidak ada";
 			}

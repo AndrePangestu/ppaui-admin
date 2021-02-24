@@ -70,9 +70,9 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Alumni ? <span class="required">*</span></label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
                             <?php if($lengkapdaftar[0]->alumni == 1) { ?>
-                              <input type="text" id="first-name" name="nama" class="form-control col-md-7 col-xs-12" value="Alumni" readonly>
+                              <input type="text" id="alumni" name="alumni" class="form-control col-md-7 col-xs-12" value="Alumni" readonly>
                             <?php } else {?>
-                              <input type="text" id="first-name" name="nama" class="form-control col-md-7 col-xs-12" value="Non Alumni" readonly>
+                              <input type="text" id="alumni" name="alumni" class="form-control col-md-7 col-xs-12" value="Non Alumni" readonly>
                             <?php } ?>  
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tempat Lahir <span class="required">*</span></label>
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <input type="text" id="first-name" name="tempat_lahir" class="form-control col-md-7 col-xs-12" required="required" value="<?php echo $lengkapdaftar[0]->tempat_lahir;?>" readonly>
+                                <input type="text" id="tempat_lahir" name="tempat_lahir" class="form-control col-md-7 col-xs-12" required="required" value="<?php echo $lengkapdaftar[0]->tempat_lahir;?>" readonly>
                             </div>
                         </div>
                         <div class="form-group">
@@ -290,10 +290,11 @@
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="daftar">Jenis Pembayaran <span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="form-control" id="jenis_pembayaran" name="jenis_pembayaran" required="required">
+                            <!-- <select class="form-control" id="jenis_pembayaran" name="jenis_pembayaran" required="required">
                                 <option value="">Pilih jenis pembayaran...</option>
                                 <option value="<?php echo $lengkapdaftar[0]->jenis_pembayaran;?>"><?php echo $lengkapdaftar[0]->jenis_pembayaran;?></option>
-                            </select>
+                            </select> -->
+                            <input type="text" id="jenis_pembayaran" name="jenis_pembayaran" class="form-control col-md-7 col-xs-12" value="<?php echo $lengkapdaftar[0]->jenis_pembayaran;?>" readonly>
                         </div>
 
                         <div class="bayar cicilan" id="cicilan">
@@ -307,6 +308,12 @@
                             </div>
                         </div>
                     </div>
+                    <?php if($lengkapdaftar[0]->alumni == 1) { ?>
+                        <input type="text" id="discount" name="discount" class="form-control col-md-7 col-xs-12" value="10" style="display: none;" readonly>
+                    <?php } else { ?>
+                        <input type="text" id="discount" name="discount" class="form-control col-md-7 col-xs-12" value="0" style="display: none;" readonly>
+                    <?php } ?> 
+                        
 
                     <div class="bayar perusahaan" id="perusahaan" >
                         <div class="form-group">
@@ -427,7 +434,7 @@
 
         var myForm = document.formdaftar5;
 
-        if ((myForm.file_smp_cicilan.value != "") || (myForm.file_smp_perusahaan.value != "" && myForm.file_gl.value != "")){
+        // if ((myForm.file_smp_cicilan.value != "") || (myForm.file_smp_perusahaan.value != "" && myForm.file_gl.value != "")){
             
             e.preventDefault();
                 $.ajax({
@@ -450,11 +457,11 @@
                         // }
                     }
                 });
-        } else {
+        // } else {
         
-            alert("Berkas Belum di Upload");
-            return false;
+        //     alert("Berkas Belum di Upload");
+        //     return false;
 
-        }
+        // }
     });
 </script>

@@ -149,13 +149,13 @@ echo anchor($this->uri->segment(1).'/post',"<i class='fa fa-pencil-square-o'></i
                     <input type="text" id="sts_aktif_daftar" name="sts_aktif_daftar" class="form-control col-md-7 col-xs-12" readonly>
                   </div>    
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file-name">Discount :
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="text" id="discount" name="discount" class="form-control col-md-7 col-xs-12" readonly>
                   </div>    
-                </div>
+                </div> -->
                             
             </form>
             </div>
@@ -203,7 +203,7 @@ function detailData(id_m_pelatihan){
           var tipe_pelatihan = '';
           var sts_pelatihan = '';
           var sts_aktif_daftar = '';
-          var discount = '';
+          // var discount = '';
           
           if(data.id_m_pelatihan.length>0){
             $.each(data.id_m_pelatihan,function(a,b){
@@ -216,7 +216,7 @@ function detailData(id_m_pelatihan){
                 tipe_pelatihan = b.tipe_pelatihan;
                 sts_pelatihan = b.sts_pelatihan;
                 sts_aktif_daftar = b.sts_aktif_daftar;
-                discount = b.discount;
+                // discount = b.discount;
             });
           }
  
@@ -238,7 +238,7 @@ function detailData(id_m_pelatihan){
           $(modalid+' #tipe_pelatihan').val(tipe_pelatihan);
           $(modalid+' #sts_pelatihan').val(sts_pelatihan);
           $(modalid+' #sts_aktif_daftar').val(sts_aktif_daftar);
-          $(modalid+' #discount').val(discount + '%');
+          // $(modalid+' #discount').val(discount + '%');
           $('#form-detaildata').show();
         }   
       });

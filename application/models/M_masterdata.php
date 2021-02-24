@@ -25,19 +25,24 @@ class M_masterdata extends CI_Model{
                 LEFT JOIN tbl_peserta_daftar b ON a.id_peserta_daftar = b.id_peserta_daftar
                 LEFT JOIN tbl_pelatihan_master c ON b.id_m_pelatihan = c.id_m_pelatihan
                 LEFT JOIN tbl_peserta_akun d ON d.id_akun_peserta = a.id_akun_peserta
-                ORDER BY a.id_konfirmasi_bayar DESC";
+                ORDER BY a.id_konfirmasi_bayar ASC";
         $query = $this->db->query($sql);
         $result = $query->result();
         return $result;
     }
 
     function get_loadvalidasi(){
-        $sql = "SELECT a.*,b.jenis_pembayaran, c.nama_pelatihan, d.nama, b.status_pembayaran, b.keterangan, b.status_validasi
-                FROM tbl_konfirmasi_bayar a
-                LEFT JOIN tbl_peserta_daftar b ON a.id_peserta_daftar = b.id_peserta_daftar
+        // $sql = "SELECT a.*,b.jenis_pembayaran, c.nama_pelatihan, d.nama, b.status_pembayaran, b.keterangan, b.status_validasi
+        //         FROM tbl_konfirmasi_bayar a
+        //         LEFT JOIN tbl_peserta_daftar b ON a.id_peserta_daftar = b.id_peserta_daftar
+        //         LEFT JOIN tbl_pelatihan_master c ON b.id_m_pelatihan = c.id_m_pelatihan
+        //         LEFT JOIN tbl_peserta_akun d ON d.id_akun_peserta = a.id_akun_peserta
+        //         ORDER BY a.id_konfirmasi_bayar ASC";
+        $sql = "SELECT b.*,c.nama_pelatihan, d.nama
+                FROM tbl_peserta_daftar b
                 LEFT JOIN tbl_pelatihan_master c ON b.id_m_pelatihan = c.id_m_pelatihan
-                LEFT JOIN tbl_peserta_akun d ON d.id_akun_peserta = a.id_akun_peserta
-                ORDER BY a.id_konfirmasi_bayar DESC";
+                LEFT JOIN tbl_peserta_akun d ON b.id_akun_peserta = d.id_akun_peserta
+                ORDER BY b.id_peserta_daftar DESC";
         $query = $this->db->query($sql);
         $result = $query->result();
         return $result;

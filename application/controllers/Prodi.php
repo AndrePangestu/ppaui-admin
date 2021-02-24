@@ -40,7 +40,7 @@ class Prodi extends CI_Controller{
             $sts_pelatihan   =   $this->input->post('sts_pelatihan');
             $sts_aktif   =   $this->input->post('sts_aktif');
             $sts_aktif_daftar   =   $this->input->post('sts_aktif_daftar');
-            $discount = $this->input->post('discount');
+            // $discount = $this->input->post('discount');
             $data   =   array(
                 'nama_pelatihan'=>$nama,
                 'kd_pelatihan'=>$kdpelatihan,
@@ -60,7 +60,7 @@ class Prodi extends CI_Controller{
                 'status' => $sts_aktif,
                 'sts_aktif_daftar' => $sts_aktif_daftar,
                 'insert_date' => date('Y-m-d H:i:s'),
-                'discount' => $discount
+                // 'discount' => $discount
             );
 
             $this->db->insert($this->tables,$data);
@@ -95,7 +95,7 @@ class Prodi extends CI_Controller{
             $sts_pelatihan   =   $this->input->post('sts_pelatihan');
             $sts_aktif   =   $this->input->post('sts_aktif');
             $sts_aktif_daftar   =   $this->input->post('sts_aktif_daftar');
-            $discount   =   $this->input->post('discount');
+            // $discount   =   $this->input->post('discount');
             $data   =   array(
                 'nama_pelatihan'=>$nama,
                 'kd_pelatihan'=>$kdpelatihan,
@@ -114,7 +114,7 @@ class Prodi extends CI_Controller{
                 'status' => $sts_aktif,
                 'sts_aktif_daftar' => $sts_aktif_daftar,
                 'insert_date' => date('Y-m-d H:i:s'),
-                'discount' => $discount
+                // 'discount' => $discount
             );
             $this->mcrud->update($this->tables,$data, $this->pk,$id);
             redirect($this->uri->segment(1));

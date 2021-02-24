@@ -153,14 +153,14 @@ echo form_open_multipart($this->uri->segment(1).'/post');
             </div>
         </td>
     </tr>
-    <tr>
+    <!-- <tr>
         <td width="150">Discount %</td>
         <td>
             <div class="col-md-4 col-sm-4 col-xs-12">
                 <input type='text' id='discount' name='discount' class="form-control">
             </div>
         </td>
-    </tr>
+    </tr> -->
     <tr>
          <td></td>
          <td colspan="2"> 

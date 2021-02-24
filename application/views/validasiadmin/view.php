@@ -45,8 +45,8 @@
         el+="<th>Nama</th>";
         el+="<th class='col-sm-4'>Nama Pelatihan</th>";
         el+="<th>Jenis Pembayaran</th>";
-        el+="<th>Total Bayar</th>";
-        el+="<th>Tanggal Transfer</th>";
+        // el+="<th>Total Bayar</th>";
+        // el+="<th>Tanggal Transfer</th>";
         el+="<th>Keterangan</th>";
         el+="<th>Action</th>";
 
@@ -57,14 +57,20 @@
            if(d.rows.length>0){
 
             $.each(d.rows,function(a,b){
-            el+="<tr id='trdatafile-"+b.id_konfirmasi_bayar+"'>";
+            el+="<tr id='trdatafile-"+b.id_peserta_daftar+"'>";
             el+="<td class='text-center'>"+no+"</td>";
             el+="<td>"+b.nama+"</td>";
             el+="<td>"+b.nama_pelatihan+"</td>";
             el+="<td>"+b.jenis_pembayaran+"</td>";
-            el+="<td>"+b.total_bayar+"</td>";
-            el+="<td>"+b.tgl_transfer+"</td>";
-            el+="<td>"+b.keterangan+"</td>";
+            // el+="<td>"+b.total_bayar+"</td>";
+            // el+="<td>"+b.tgl_transfer+"</td>";
+            // el+="<td>"+b.keterangan+"</td>";
+            if(b.status_validasi == 1){
+              el+="<td>Pengecekan Berhasil</td>";
+            }
+            else{
+              el+="<td>Belum Dikonfirmasi</td>";
+            }
 
             // if(b.keterangan == "Pengecekkan berhasil"){
             // var action = '<div class="btn-group">'
